@@ -1,16 +1,16 @@
-const handType = ["rock", "paper", "scissor", "fuck"];
+const handType = ["rock", "paper", "scissor", "finger"];
 const wins = {
-  rock: ["scissor", "fuck"],
+  rock: ["scissor", "finger"],
   paper: ["rock"],
   scissor: ["paper"],
-  fuck: ["paper", "scissor"],
+  finger: ["paper", "scissor"],
 };
 
 const handToEmoji = {
   rock: "✊",
   paper: "🖐️",
   scissor: "✌️",
-  fuck: "🖕",
+  finger: "🖕",
 };
 
 let hands, enemyHand;
@@ -42,7 +42,7 @@ function setup() {
   hands["rock"] = generateSprite(100, "✊");
   hands["paper"] = generateSprite(100, "🖐️");
   hands["scissor"] = generateSprite(100, "✌️");
-  //   hands["fuck"] = generateSprite(100, "🖕");
+  //   hands["finger"] = generateSprite(100, "🖕");
 
   const enemyHandNumber = Math.floor(random(0, 4));
   enemyHand = handType[enemyHandNumber];

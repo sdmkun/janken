@@ -18,5 +18,6 @@
 	},
 	"devDependencies": {
 		"tsc": "^2.0.4"
-	}
+	},
+	"type": "module"
 }

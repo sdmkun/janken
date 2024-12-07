@@ -1,21 +1,22 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-require("q5/q5");
-require("p5play");
-const handType = ["rock", "paper", "scissor", "fuck"];
-const wins = new Map();
-wins.set("rock", ["scissor", "fuck"]);
-wins.set("paper", ["rock"]);
-wins.set("scissor", ["paper"]);
-wins.set("fuck", ["paper", "scissor"]);
-const handToEmoji = new Map();
-handToEmoji.set("rock", "✊");
-handToEmoji.set("paper", "🖐️");
-handToEmoji.set("scissor", "✌️");
-handToEmoji.set("fuck", "🖕");
+const handType = ['rock', 'paper', 'scissor', 'finger'];
+const wins = new Map([
+    ['rock', ['scissor', 'finger']],
+    ['paper', ['rock']],
+    ['scissor', ['paper']],
+    ['finger', ['paper', 'scissor']],
+]);
+const handToEmoji = new Map([
+    ['rock', '✊'],
+    ['paper', '🖐️'],
+    ['scissor', '✌️'],
+    ['finger', '🖕'],
+]);
 const hands = new Map();
 let enemyHand;
-let resultSprite;
+let enemyHandSprite;
+let level = 1;
+let lastResult = '';
 const generateSprite = (size, emoji) => {
     const sprite = new Sprite();
     sprite.width = size;
@@ -24,44 +25,49 @@ const generateSprite = (size, emoji) => {
     return sprite;
 };
 const judge = (a, b) => {
-    var _a;
     if (a === b) {
         return 0;
     }
-    if ((_a = wins.get(a)) === null || _a === void 0 ? void 0 : _a.includes(b)) {
+    if (wins.get(a)?.includes(b)) {
         return 1;
     }
     return -1;
 };
 function setup() {
-    new Canvas(500, 500, "webgl");
-    displayMode("centered", "smooth", 1);
-    hands.set("rock", generateSprite(100, "✊"));
-    hands.set("paper", generateSprite(100, "🖐️"));
-    hands.set("scissor", generateSprite(100, "✌️"));
-    //   hands["fuck"] = generateSprite(100, "🖕");
+    new Canvas(500, 500, 'webgl');
+    displayMode('centered', 'smooth', 1);
+    const playerHandType = ['rock', 'paper', 'scissor'];
+    playerHandType.forEach((hand) => {
+        const sprite = generateSprite(100, handToEmoji.get(hand) || '');
+        sprite.y = 300;
+        hands.set(hand, sprite);
+    });
     const enemyHandNumber = Math.floor(random(0, 4));
     enemyHand = handType[enemyHandNumber];
-    const enemyHandSprite = generateSprite(150, handToEmoji.get(enemyHand) || "");
+    enemyHandSprite = generateSprite(150, handToEmoji.get(enemyHand) || '');
     enemyHandSprite.y = 100;
-    resultSprite = generateSprite(150, "?");
-    resultSprite.y = 300;
+    enemyHandSprite.velocity.x = 5;
 }
 function draw() {
     background(220);
+    textSize(32);
+    text(`Level: ${level}`, 16, 40);
+    if (enemyHandSprite.x > width + 100) {
+        enemyHandSprite.x = -100;
+    }
     for (const [hand, sprite] of hands) {
-        if (sprite.mouse.presses("")) {
+        if (sprite.mouse.presses('left')) {
+            enemyHandSprite.velocity.x = 0;
+            enemyHandSprite.x = width / 2;
             const result = judge(hand, enemyHand);
             if (result === 1) {
-                resultSprite.image = "W";
             }
             else if (result === 0) {
-                resultSprite.image = "-";
             }
             else {
-                resultSprite.image = "L";
             }
         }
-        sprite.scale = sprite.mouse.pressing("") ? 2.0 : 1.0;
+        sprite.scale = sprite.mouse.pressing('left') ? 2.0 : 1.0;
     }
 }
+//# sourceMappingURL=index.js.map
